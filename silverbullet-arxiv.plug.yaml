@@ -1,0 +1,6 @@
+name: silverbullet-arxiv
+functions:
+  helloWorld:
+    path: silverbullet-arxiv.ts:helloWorld
+    command:
+      name: "Say hello"
