@@ -1,7 +1,8 @@
 {
   "tasks": {
     "build": "silverbullet plug:compile -c deno.jsonc silverbullet-arxiv.plug.yaml",
-    "watch": "silverbullet plug:compile -c deno.jsonc silverbullet-arxiv.plug.yaml -w"
+    "watch": "silverbullet plug:compile -c deno.jsonc silverbullet-arxiv.plug.yaml -w",
+    "test": "deno test --allow-net --allow-write --allow-read tests/"
   },
   "lint": {
     "rules": {
@@ -16,6 +17,9 @@
     ]
   },
   "imports": {
-    "@silverbulletmd/silverbullet": "jsr:@silverbulletmd/silverbullet@^0.9.0"
+    "@silverbulletmd/silverbullet": "jsr:@silverbulletmd/silverbullet@^0.9.0",
+    "assertEquals": "https://deno.land/std@0.224.0/assert/assert_equals.ts",
+    "assert": "https://deno.land/std@0.224.0/assert/assert.ts",
+    "assertExists": "https://deno.land/std@0.224.0/assert/assert_exists.ts"
   }
 }
