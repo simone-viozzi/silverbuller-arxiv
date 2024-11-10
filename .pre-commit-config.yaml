@@ -24,7 +24,7 @@ repos:
 
       - id: deno-test
         name: Deno Test
-        entry: deno test --allow-read --allow-net
+        entry: deno task test
         language: system
         files: "\\.ts$"
         always_run: true

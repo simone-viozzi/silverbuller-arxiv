@@ -70,12 +70,11 @@ English constituency parsing both with large and limited training data.
 Deno.test("fetchArxivMetadata - parses metadata correctly with mocked XML response", async () => {
   // Mock the fetch function to return the mock XML response
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response(mockMetadataXML, { status: 200 });
+  globalThis.fetch = () =>
+    Promise.resolve(new Response(mockMetadataXML, { status: 200 }));
 
   try {
     const metadata = await fetchArxivMetadata("1706.03762");
-
-    console.log(metadata);
 
     assertEquals(metadata.id, "http://arxiv.org/abs/1706.03762v7");
     assertEquals(metadata.title, "Attention Is All You Need");

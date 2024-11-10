@@ -2,6 +2,13 @@ import { assertEquals } from "assertEquals";
 import { assertExists } from "assertExists";
 import { downloadArxivPaper } from "../silverbullet-arxiv.ts";
 
+// Utility function to create a temporary directory for tests
+async function createTempDir() {
+  const tempDir = await Deno.makeTempDir();
+  console.log(`Temporary directory created at: ${tempDir}`);
+  return tempDir;
+}
+
 Deno.test("downloadArxivPaper - correctly downloads and saves a file with mock data", async () => {
   // Define the mock responses
   const mockMetadataResponse = `
@@ -15,23 +22,25 @@ Deno.test("downloadArxivPaper - correctly downloads and saves a file with mock d
 
   // Mock fetch for metadata and PDF
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (
+  globalThis.fetch = (
     input: string | URL | Request,
     init?: RequestInit,
   ) => {
     const url = input instanceof Request ? input.url : input.toString();
     if (url.includes("api/query")) {
       // Mock metadata response
-      return new Response(mockMetadataResponse, { status: 200 });
+      return Promise.resolve(
+        new Response(mockMetadataResponse, { status: 200 }),
+      );
     } else if (url.includes("pdf")) {
       // Mock PDF response
-      return new Response(mockPdfContent, { status: 200 });
+      return Promise.resolve(new Response(mockPdfContent, { status: 200 }));
     }
     return originalFetch(input, init);
   };
 
   // Temporary output directory
-  const outputDir = "./test_downloads";
+  const outputDir = await createTempDir();
   const paperId = "2410.19414"; // Mock ID
   const version = "";
 
@@ -55,13 +64,6 @@ Deno.test("downloadArxivPaper - correctly downloads and saves a file with mock d
   // Restore original fetch
   globalThis.fetch = originalFetch;
 });
-
-// Utility function to create a temporary directory for tests
-async function createTempDir() {
-  const tempDir = await Deno.makeTempDir();
-  console.log(`Temporary directory created at: ${tempDir}`);
-  return tempDir;
-}
 
 Deno.test("downloadArxivPaper - correctly downloads a real paper from arXiv", async () => {
   // Example paper ID from arXiv

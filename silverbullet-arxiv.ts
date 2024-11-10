@@ -16,6 +16,29 @@ interface ArxivMetadata {
   pdfUrl: string;
 }
 
+interface ArxivXmlEntry {
+  title?: string | { "#text": string };
+  summary?: string | { "#text": string };
+  author?: { name: string } | { name: string }[];
+  published?: string | { "#text": string };
+  updated?: string | { "#text": string };
+  id?: string | { "#text": string };
+  "arxiv:comment"?: string | { "#text": string };
+  link?: { "@title"?: string; "@href"?: string } | {
+    "@title"?: string;
+    "@href"?: string;
+  }[];
+  category?: { "@term"?: string } | { "@term"?: string }[];
+}
+
+interface ArxivXmlFeed {
+  entry?: ArxivXmlEntry;
+}
+
+interface ParsedArxivXml {
+  feed?: ArxivXmlFeed;
+}
+
 /**
  * Fetches and parses the metadata of a paper from arXiv given its paper ID.
  * @param {string} paperId - The arXiv paper ID (e.g., "1706.03762").
@@ -35,15 +58,15 @@ export async function fetchArxivMetadata(
   }
 
   const metadata = await response.text();
-  const xmlDoc = parse(metadata);
+  const xmlDoc = parse(metadata) as ParsedArxivXml;
 
-  // Ensure correct pathing through XML structure
+  // Safely access the XML structure
   const entry = xmlDoc?.feed?.entry || {};
 
   const extractText = (field: any): string => {
     if (typeof field === "string") {
       return field.trim();
-    } else if (field["#text"]) {
+    } else if (field && field["#text"]) {
       return field["#text"].trim();
     }
     return "";
@@ -53,7 +76,7 @@ export async function fetchArxivMetadata(
   const abstract = extractText(entry.summary);
 
   const authors = Array.isArray(entry.author)
-    ? entry.author.map((author: any) => extractText(author.name))
+    ? entry.author.map((author) => extractText(author.name))
     : [extractText(entry.author?.name)];
 
   const publishedDate = extractText(entry.published);
@@ -62,13 +85,13 @@ export async function fetchArxivMetadata(
   const comment = extractText(entry["arxiv:comment"]);
 
   const pdfLink = Array.isArray(entry.link)
-    ? entry.link.find((link: any) => link["@title"] === "pdf")
+    ? entry.link.find((link) => link["@title"] === "pdf")
     : entry.link;
 
   const pdfUrl = pdfLink?.["@href"] || "";
 
   const categories = Array.isArray(entry.category)
-    ? entry.category.map((cat: any) => cat["@term"] || "")
+    ? entry.category.map((cat) => cat["@term"] || "")
     : [entry.category?.["@term"] || ""];
 
   return {
