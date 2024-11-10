@@ -1,0 +1,36 @@
+repos:
+  - repo: local
+    hooks:
+      - id: deno-fmt
+        name: Deno Format
+        entry: deno fmt
+        language: system
+        types: [javascript, ts]
+
+      - id: deno-lint
+        name: Deno Lint
+        entry: deno lint
+        language: system
+        types: [javascript, ts]
+
+      - id: deno-check
+        name: Deno Type Check
+        entry: deno check
+        language: system
+        types: [javascript, ts]
+
+      - id: deno-test
+        name: Deno Test
+        entry: deno test --allow-read --allow-net
+        language: system
+        types: [javascript, ts]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: detect-private-key
