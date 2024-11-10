@@ -26,7 +26,8 @@ export async function fetchArxivMetadata(
   paperId: string,
   version: string = "",
 ): Promise<ArxivMetadata> {
-  const apiUrl = `https://export.arxiv.org/api/query?id_list=${paperId}${version}`;
+  const apiUrl =
+    `https://export.arxiv.org/api/query?id_list=${paperId}${version}`;
   const response = await fetch(apiUrl);
 
   if (!response.ok) {

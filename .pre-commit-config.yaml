@@ -5,25 +5,29 @@ repos:
         name: Deno Format
         entry: deno fmt
         language: system
-        types: [javascript, ts]
+        files: "\\.ts$"
+        always_run: true
 
       - id: deno-lint
         name: Deno Lint
         entry: deno lint
         language: system
-        types: [javascript, ts]
+        files: "\\.ts$"
+        always_run: true
 
       - id: deno-check
         name: Deno Type Check
         entry: deno check
         language: system
-        types: [javascript, ts]
+        files: "\\.ts$"
+        always_run: true
 
       - id: deno-test
         name: Deno Test
         entry: deno test --allow-read --allow-net
         language: system
-        types: [javascript, ts]
+        files: "\\.ts$"
+        always_run: true
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0

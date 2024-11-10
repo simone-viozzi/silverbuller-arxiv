@@ -70,13 +70,12 @@ English constituency parsing both with large and limited training data.
 Deno.test("fetchArxivMetadata - parses metadata correctly with mocked XML response", async () => {
   // Mock the fetch function to return the mock XML response
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () =>
-    new Response(mockMetadataXML, { status: 200 });
+  globalThis.fetch = async () => new Response(mockMetadataXML, { status: 200 });
 
   try {
     const metadata = await fetchArxivMetadata("1706.03762");
 
-    console.log(metadata)
+    console.log(metadata);
 
     assertEquals(metadata.id, "http://arxiv.org/abs/1706.03762v7");
     assertEquals(metadata.title, "Attention Is All You Need");
@@ -92,7 +91,10 @@ Deno.test("fetchArxivMetadata - parses metadata correctly with mocked XML respon
     ]);
     assertEquals(metadata.publishedDate, "2017-06-12T17:57:34Z");
     assertEquals(metadata.updatedDate, "2023-08-02T00:41:18Z");
-    assertEquals(metadata.abstract.includes("The dominant sequence transduction models"), true);
+    assertEquals(
+      metadata.abstract.includes("The dominant sequence transduction models"),
+      true,
+    );
     assertEquals(metadata.comment, "15 pages, 5 figures");
     assertEquals(metadata.categories, ["cs.CL", "cs.LG"]);
     assertEquals(metadata.pdfUrl, "http://arxiv.org/pdf/1706.03762v7");
@@ -114,8 +116,14 @@ Deno.test("fetchArxivMetadata - retrieves real metadata from arXiv", async () =>
   assertEquals(metadata.title, "Attention Is All You Need");
   assertEquals(metadata.authors.includes("Ashish Vaswani"), true);
   assertEquals(metadata.authors.length > 0, true); // Ensure there are authors
-  assertEquals(metadata.abstract.includes("The dominant sequence transduction models"), true);
-  assertEquals(metadata.pdfUrl.includes("http://arxiv.org/pdf/1706.03762"), true);
+  assertEquals(
+    metadata.abstract.includes("The dominant sequence transduction models"),
+    true,
+  );
+  assertEquals(
+    metadata.pdfUrl.includes("http://arxiv.org/pdf/1706.03762"),
+    true,
+  );
 
   console.log("Real request test passed: Metadata retrieved and validated.");
 });
